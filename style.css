@@ -1,0 +1,252 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
+
+:root {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #e0e0e0;
+  --text-secondary: #888;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  --input-border: #333;
+  --btn-gradient: linear-gradient(90deg, #9c88ff, #745bfa);
+}
+
+body.light-mode {
+  --bg-color: #f7f7f7;
+  --card-bg: #fff;
+  --text-color: #333;
+  --text-secondary: #555;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --input-border: #dedede;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  margin: 30px auto;
+  width: 400px;
+  padding: 20px;
+}
+
+h1 {
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.balance-container {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.balance-container h4 {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.balance-container h1 {
+  font-size: 42px;
+  margin-top: 5px;
+}
+
+.inc-exp-container {
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  box-shadow: var(--shadow);
+}
+
+.inc-exp-container > div {
+  flex: 1;
+  text-align: center;
+}
+
+.inc-exp-container > div:first-of-type {
+  border-right: 1px solid var(--input-border);
+}
+
+.money {
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.money.plus {
+  color: #00ff6a;
+  text-shadow: 0 0 10px rgba(0, 255, 106, 0.4);
+}
+
+.money.minus {
+  color: #ff1900;
+  text-shadow: 0 0 10px rgba(255, 25, 0, 0.4);
+}
+
+h3 {
+  border-bottom: 1px solid var(--input-border);
+  padding-bottom: 10px;
+  margin: 40px 0 10px;
+  color: #bbb;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 40px;
+}
+
+.list li {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.list li:hover {
+  transform: scale(1.02);
+}
+
+.list li.plus {
+  border-left: 5px solid #00ff6a;
+}
+
+.list li.minus {
+  border-left: 5px solid #ff1900;
+}
+
+label {
+  display: inline-block;
+  margin: 10px 0 5px;
+  color: #bbb;
+}
+
+input {
+  border: 1px solid var(--input-border);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 8px;
+  display: block;
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  transition: 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #9c88ff;
+  box-shadow: 0 0 5px rgba(156, 136, 255, 0.5);
+}
+
+.btn {
+  cursor: pointer;
+  background: linear-gradient(90deg, #9c88ff, #745bfa);
+  box-shadow: 0 4px 10px rgba(116, 91, 250, 0.4);
+  color: #fff;
+  border: 0;
+  border-radius: 50px;
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px;
+  width: 100%;
+  margin-top: 20px;
+  transition: transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.delete-btn {
+  cursor: pointer;
+  background-color: #ff1900;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  padding: 5px 10px;
+
+  position: absolute;
+  top: 50%;
+  left: -40px;
+  transform: translateY(-50%);
+
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.list li:hover .delete-btn {
+  opacity: 1;
+  left: -35px;
+}
+
+body,
+.inc-exp-container,
+.list li,
+input,
+h1,
+p,
+h4 {
+  transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.theme-btn{
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  transition: transform 0.3 ease, color 0.3s ease;
+}
+
+.theme-btn:hover{
+  transform: scale(1.2) rotate(15deg);
+  color: #9c88ff;
+}
+
+.theme-btn:active{
+  transform: scale(0.9);
+}
+
+@media (max-width: 450px) {
+  .container {
+    width: 100%;
+    padding: 20px;
+  }
+  .delete-btn {
+    position: static;
+    transform: none;
+    opacity: 1;
+    margin-left: 10px;
+  }
+}

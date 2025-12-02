@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Грошомір</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <button id="theme-toggle" class="theme-btn">
+        <i class="fas fa-moon"></i>
+      </button>
+      <h1>Грошомір</h1>
+
+      <div class="balance-container">
+        <h4>Твій баланс</h4>
+        <p id="balance">$0.00</p>
+      </div>
+
+      <div class="inc-exp-container">
+        <div>
+          <h4>Доходи</h4>
+          <p id="money-plus" class="money plus">+$0.00</p>
+        </div>
+        <div>
+          <h4>Витрати</h4>
+          <p id="money-minus" class="money minus">-$0.00</p>
+        </div>
+      </div>
+
+      <h3>Історія</h3>
+      <ul id="list" class="list"></ul>
+
+      <h3>Нова транзакція</h3>
+      <form id="form">
+        <div class="form-control">
+          <label for="text">Назва</label>
+          <input type="text" id="text" placeholder="..." />
+        </div>
+        <div class="form-control">
+          <label for="amount"
+            >Сума <br />
+            (негативне - витрата, позитивне - дохід)</label
+          >
+          <input type="number" id="amount" placeholder="Введіть суму..." />
+        </div>
+        <button class="btn">Додати транзакцію</button>
+      </form>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
