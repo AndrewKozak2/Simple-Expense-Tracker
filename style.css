@@ -217,7 +217,7 @@ h4 {
   transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.theme-btn{
+.theme-btn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -229,12 +229,12 @@ h4 {
   transition: transform 0.3 ease, color 0.3s ease;
 }
 
-.theme-btn:hover{
+.theme-btn:hover {
   transform: scale(1.2) rotate(15deg);
   color: #9c88ff;
 }
 
-.theme-btn:active{
+.theme-btn:active {
   transform: scale(0.9);
 }
 
@@ -249,4 +249,48 @@ h4 {
     opacity: 1;
     margin-left: 10px;
   }
+}
+
+.category-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.category-grid input[type="radio"] {
+  display: none;
+}
+
+.category-grid label {
+  cursor: pointer;
+  background-color: var(--card-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-secondary);
+
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+
+  transition: all 0.3s ease;
+}
+
+.category-grid label:hover {
+  border-color: #9c88ff;
+  color: #9c88ff;
+  transform: translateY(-2px);
+}
+
+.category-grid input[type="radio"]:checked + label {
+  background: var(--btn-gradient);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 10px rgba(156, 136, 255, 0.6);
+  transform: scale(1.1);
 }

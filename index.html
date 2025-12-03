@@ -45,16 +45,92 @@
       <h3>Нова транзакція</h3>
       <form id="form">
         <div class="form-control">
-          <label for="text">Назва</label>
-          <input type="text" id="text" placeholder="..." />
+          <label>Оберіть категорію</label>
+          <div class="category-grid">
+            <input
+              type="radio"
+              name="category"
+              id="cat-food"
+              value="food"
+              checked
+            />
+            <label for="cat-food" title="Їжа"
+              ><i class="fa-solid fa-burger"></i
+            ></label>
+
+            <input
+              type="radio"
+              name="category"
+              id="cat-transport"
+              value="transport"
+            />
+            <label for="cat-transport" title="Транспорт"
+              ><i class="fa-solid fa-car"></i
+            ></label>
+
+            <input
+              type="radio"
+              name="category"
+              id="cat-shopping"
+              value="shopping"
+            />
+            <label for="cat-shopping" title="Шопінг"
+              ><i class="fa-solid fa-bag-shopping"></i
+            ></label>
+
+            <input
+              type="radio"
+              name="category"
+              id="cat-entertainment"
+              value="entertainment"
+            />
+            <label for="cat-entertainment" title="Розваги"
+              ><i class="fa-solid fa-film"></i
+            ></label>
+
+            <input type="radio" name="category" id="cat-home" value="home" />
+            <label for="cat-home" title="Дім"
+              ><i class="fa-solid fa-house"></i
+            ></label>
+
+            <input
+              type="radio"
+              name="category"
+              id="cat-salary"
+              value="salary"
+            />
+            <label for="cat-salary" title="Зарплата"
+              ><i class="fa-solid fa-money-bill-wave"></i
+            ></label>
+
+            <input
+              type="radio"
+              name="category"
+              id="cat-other"
+              value="uncategorized"
+            />
+            <label for="cat-other" title="Інше"
+              ><i class="fa-solid fa-circle-question"></i
+            ></label>
+          </div>
         </div>
+
+        <div class="form-control">
+          <label for="text">Назва транзакції</label>
+          <input
+            type="text"
+            id="text"
+            placeholder="Введіть назву транзакції..."
+          />
+        </div>
+
         <div class="form-control">
           <label for="amount"
-            >Сума <br />
-            (негативне - витрата, позитивне - дохід)</label
+            >Сума <br />(негативне - витрата, позитивне - дохід)</label
           >
           <input type="number" id="amount" placeholder="Введіть суму..." />
         </div>
+
         <button class="btn">Додати транзакцію</button>
       </form>
     </main>
