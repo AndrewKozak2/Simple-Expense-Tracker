@@ -34,29 +34,70 @@ const localStorageTransactions = JSON.parse(
 let transactions =
   localStorage.getItem("transactions") !== null ? localStorageTransactions : [];
 
-function addTransactionDOM(transaction) {
-  const sign = transaction.amount < 0 ? "-" : "+";
-  const itemClass = transaction.amount < 0 ? "minus" : "plus";
+function formatDate(dateString) {
+  if (!dateString) return "Раніше";
 
-  const iconClass = categoryIcons[transaction.category] || "fa-circle-question";
+  const date = new Date(dateString);
+  const now = new Date();
 
-  const item = document.createElement("li");
-  item.classList.add(itemClass);
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
 
-  const formattedAmount = formatMoney(Math.abs(transaction.amount));
+  const isYesterday =
+    date.getDate() === now.getDate() - 1 &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
 
-  item.innerHTML = `
-    <i class="fa-solid ${iconClass}" style="font-size: 20px; width: 30px; text-align: center; color: var(--text-secondary);"></i>
-    
-    <div style="flex: 1; margin-left: 10px; display: flex; justify-content: space-between;">
-        <span>${transaction.text}</span>
-        <span>${sign}${formattedAmount}</span>
-    </div>
+  if (isToday) return "Сьогодні";
+  if (isYesterday) return "Вчора";
 
-    <button class="delete-btn" onclick="removeTransaction(${transaction.id})">x</button>
-  `;
+  return date.toLocaleDateString("uk-UA");
+}
 
-  list.appendChild(item);
+function renderHistory() {
+  list.innerHTML = "";
+
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    return new Date(b.date || 0) - new Date(a.date || 0);
+  });
+
+  let lastDateHeader = null;
+
+  sortedTransactions.forEach((transaction) => {
+    const dateLabel = formatDate(transaction.date);
+
+    if (dateLabel !== lastDateHeader) {
+      const header = document.createElement("div");
+      header.classList.add("date-header");
+      header.innerText = dateLabel;
+      list.appendChild(header);
+      lastDateHeader = dateLabel;
+    }
+
+    const sign = transaction.amount < 0 ? "-" : "+";
+    const itemClass = transaction.amount < 0 ? "minus" : "plus";
+    const iconClass =
+      categoryIcons[transaction.category] || "fa-circle-question";
+    const formattedAmount = formatMoney(Math.abs(transaction.amount));
+
+    const item = document.createElement("li");
+    item.classList.add(itemClass);
+    item.innerHTML = `
+      <i class="fa-solid ${iconClass}" style="font-size: 20px; width: 30px; text-align: center; color: var(--text-secondary);"></i>
+      <div class="transaction-info">
+          <span class="t-name">${transaction.text}</span>
+          <span class="t-amount">${sign}${formattedAmount}</span>
+      </div>
+      
+      <button class="delete-btn" onclick="removeTransaction(${transaction.id})">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    `;
+
+    list.appendChild(item);
+  });
 }
 
 function updateValues() {
@@ -98,10 +139,11 @@ function addTransaction(e) {
     text: text.value,
     amount: +amount.value,
     category: categoryValue,
+    date: new Date(),
   };
 
   transactions.push(newTransaction);
-  addTransactionDOM(newTransaction);
+  renderHistory();
   updateValues();
   updateLocalStorage();
   renderChart();
@@ -148,11 +190,11 @@ themeToggleBtn.addEventListener("click", () => {
   const isLightMode = body.classList.contains("light-mode");
   updateIcon(isLightMode);
   localStorage.setItem("theme", isLightMode ? "light" : "dark");
+  renderChart();
 });
 
 function init() {
-  list.innerHTML = "";
-  transactions.forEach(addTransactionDOM);
+  renderHistory();
   updateValues();
   renderChart();
 }
@@ -162,8 +204,9 @@ form.addEventListener("submit", addTransaction);
 let myChart = null;
 function renderChart() {
   const chartCanvas = document.getElementById("expenseChart");
-  const ctx = chartCanvas.getContext("2d");
   const chartContainer = document.querySelector(".chart-container");
+  const ctx = chartCanvas.getContext("2d");
+
   const categoriesTotal = {};
 
   transactions.forEach((transaction) => {
@@ -217,6 +260,9 @@ function renderChart() {
     myChart.destroy();
   }
 
+  const isLight = document.body.classList.contains("light-mode");
+  const textColor = isLight ? "#333333" : "#e0e0e0";
+
   myChart = new Chart(ctx, {
     type: "doughnut",
     data: {
@@ -226,8 +272,8 @@ function renderChart() {
           label: "Сума",
           data: chartData,
           backgroundColor: chartColors,
-          borderWidth: 2,
-          borderColor: "#1e1e1e",
+          borderWidth: 0,
+          borderColor: "transparent",
           hoverOffset: 10,
         },
       ],
@@ -239,17 +285,21 @@ function renderChart() {
         legend: {
           position: "bottom",
           labels: {
-            color: "#e0e0e0",
+            color: textColor,
             font: {
               size: 14,
+              family: "'Roboto', sans-serif",
             },
             padding: 20,
+            usePointStyle: true,
           },
         },
         tooltip: {
-          backgroundColor: "rgba(0,0,0,0.8)",
-          titleColor: "#fff",
-          bodyColor: "#fff",
+          backgroundColor: isLight ? "#fff" : "#333",
+          titleColor: isLight ? "#000" : "#fff",
+          bodyColor: isLight ? "#000" : "#fff",
+          borderColor: isLight ? "#ddd" : "#555",
+          borderWidth: 1,
         },
       },
       layout: {

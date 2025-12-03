@@ -4,7 +4,7 @@
   --bg-color: #121212;
   --card-bg: #1e1e1e;
   --text-color: #e0e0e0;
-  --text-secondary: #888;
+  --text-secondary: #bbb;
   --shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   --input-border: #333;
   --btn-gradient: linear-gradient(90deg, #9c88ff, #745bfa);
@@ -101,7 +101,9 @@ h1 {
   display: flex;
   justify-content: space-between;
   margin: 20px 0;
-  box-shadow: var(--shadow);
+
+  box-shadow: none;
+  border: 1px solid var(--input-border);
 }
 
 .inc-exp-container > div {
@@ -122,25 +124,55 @@ h1 {
 
 .money.plus {
   color: #00ff6a;
-  text-shadow: 0 0 10px rgba(0, 255, 106, 0.4);
 }
 
 .money.minus {
   color: #ff1900;
-  text-shadow: 0 0 10px rgba(255, 25, 0, 0.4);
 }
 
 h3 {
   border-bottom: 1px solid var(--input-border);
   padding-bottom: 10px;
   margin: 40px 0 10px;
-  color: #bbb;
+  color: var(--text-color);
 }
 
 .list {
   list-style-type: none;
   padding: 0;
   margin-bottom: 40px;
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px;
+}
+
+.list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: var(--input-border);
+  border-radius: 20px;
+}
+
+.date-header {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 15px 0 5px 0;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-color);
+  padding: 5px 0;
+  z-index: 10;
+  transition: background-color 0.4s ease;
 }
 
 .list li {
@@ -150,7 +182,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 15px 45px 15px 15px;
   margin: 10px 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -172,7 +204,7 @@ h3 {
 label {
   display: inline-block;
   margin: 10px 0 5px;
-  color: #bbb;
+  color: var(--text-secondary);
 }
 
 input {
@@ -191,6 +223,30 @@ input:focus {
   outline: none;
   border-color: #9c88ff;
   box-shadow: 0 0 5px rgba(156, 136, 255, 0.5);
+}
+
+.transaction-info {
+  flex: 1;
+  margin-left: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.t-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+.t-amount {
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: bold;
+  min-width: fit-content;
 }
 
 .btn {
@@ -215,25 +271,21 @@ input:focus {
 
 .delete-btn {
   cursor: pointer;
-  background-color: #ff1900;
+  background-color: transparent;
   border: 0;
-  border-radius: 5px;
-  color: #fff;
-  font-size: 16px;
-  padding: 5px 10px;
-
+  color: #ff1900;
+  font-size: 18px;
+  padding: 0;
   position: absolute;
   top: 50%;
-  left: -40px;
+  right: 15px;
   transform: translateY(-50%);
-
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .list li:hover .delete-btn {
   opacity: 1;
-  left: -35px;
 }
 
 body,
@@ -275,10 +327,21 @@ h4 {
     padding: 20px;
   }
   .delete-btn {
-    position: static;
-    transform: none;
     opacity: 1;
-    margin-left: 10px;
+    right: 5px;
+    font-size: 16px;
+  }
+  .list li {
+    padding: 15px 35px 15px 15px;
+  }
+  .list li:hover {
+    transform: none;
+  }
+  .t-name {
+    font-size: 14px;
+  }
+  .t-amount {
+    font-size: 14px;
   }
 }
 
@@ -299,16 +362,13 @@ h4 {
   background-color: var(--card-bg);
   border: 1px solid var(--input-border);
   color: var(--text-secondary);
-
   width: 45px;
   height: 45px;
   border-radius: 10px;
-
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-
   transition: all 0.3s ease;
 }
 
@@ -322,7 +382,6 @@ h4 {
   background: var(--btn-gradient);
   color: white;
   border-color: transparent;
-  box-shadow: 0 0 10px rgba(156, 136, 255, 0.6);
   transform: scale(1.1);
 }
 
