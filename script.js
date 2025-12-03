@@ -5,6 +5,18 @@ const list = document.getElementById("list");
 const form = document.getElementById("form");
 const text = document.getElementById("text");
 const amount = document.getElementById("amount");
+const currencyEl = document.getElementById("currency-selector");
+let savedCurrency = localStorage.getItem("currency");
+if (
+  savedCurrency !== "UAH" &&
+  savedCurrency !== "USD" &&
+  savedCurrency !== "EUR"
+) {
+  savedCurrency = "UAH";
+}
+
+let selectedCurrency = savedCurrency;
+currencyEl.value = selectedCurrency;
 
 const categoryIcons = {
   food: "fa-burger",
@@ -31,16 +43,17 @@ function addTransactionDOM(transaction) {
   const item = document.createElement("li");
   item.classList.add(itemClass);
 
+  const formattedAmount = formatMoney(Math.abs(transaction.amount));
+
   item.innerHTML = `
-    <i class="fa-solid ${iconClass}" style="margin-right: 10px; font-size: 1.2em; width: 25px; text-align: center;"></i>
+    <i class="fa-solid ${iconClass}" style="font-size: 20px; width: 30px; text-align: center; color: var(--text-secondary);"></i>
     
-    <span style="flex: 1;">${transaction.text}</span>
-    
-    <span>${sign}${Math.abs(transaction.amount)}</span>
-    
-    <button class="delete-btn" onclick="removeTransaction(${
-      transaction.id
-    })">x</button>
+    <div style="flex: 1; margin-left: 10px; display: flex; justify-content: space-between;">
+        <span>${transaction.text}</span>
+        <span>${sign}${formattedAmount}</span>
+    </div>
+
+    <button class="delete-btn" onclick="removeTransaction(${transaction.id})">x</button>
   `;
 
   list.appendChild(item);
@@ -48,19 +61,17 @@ function addTransactionDOM(transaction) {
 
 function updateValues() {
   const amounts = transactions.map((transaction) => transaction.amount);
-  const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+  const total = amounts.reduce((acc, item) => (acc += item), 0);
   const income = amounts
     .filter((item) => item > 0)
-    .reduce((acc, item) => (acc += item), 0)
-    .toFixed(2);
-  const expense = (
-    amounts.filter((item) => item < 0).reduce((acc, item) => (acc += item), 0) *
-    -1
-  ).toFixed(2);
+    .reduce((acc, item) => (acc += item), 0);
+  const expense = amounts
+    .filter((item) => item < 0)
+    .reduce((acc, item) => (acc += item), 0);
 
-  balance.innerText = `$${total}`;
-  money_plus.innerText = `+${income}`;
-  money_minus.innerText = `-${expense}`;
+  balance.innerText = formatMoney(total);
+  money_plus.innerText = formatMoney(income);
+  money_minus.innerText = formatMoney(expense);
 }
 
 function generateID() {
@@ -93,6 +104,7 @@ function addTransaction(e) {
   addTransactionDOM(newTransaction);
   updateValues();
   updateLocalStorage();
+  renderChart();
 
   text.value = "";
   amount.value = "";
@@ -142,7 +154,122 @@ function init() {
   list.innerHTML = "";
   transactions.forEach(addTransactionDOM);
   updateValues();
+  renderChart();
 }
 
 form.addEventListener("submit", addTransaction);
+
+let myChart = null;
+function renderChart() {
+  const chartCanvas = document.getElementById("expenseChart");
+  const ctx = chartCanvas.getContext("2d");
+  const chartContainer = document.querySelector(".chart-container");
+  const categoriesTotal = {};
+
+  transactions.forEach((transaction) => {
+    if (transaction.amount < 0) {
+      const cat = transaction.category;
+      const amount = Math.abs(transaction.amount);
+      if (categoriesTotal[cat]) {
+        categoriesTotal[cat] += amount;
+      } else {
+        categoriesTotal[cat] = amount;
+      }
+    }
+  });
+
+  if (Object.keys(categoriesTotal).length === 0) {
+    chartContainer.style.display = "none";
+    if (myChart) {
+      myChart.destroy();
+      myChart = null;
+    }
+    return;
+  } else {
+    chartContainer.style.display = "block";
+  }
+
+  const chartLabels = Object.keys(categoriesTotal).map((cat) => {
+    const names = {
+      food: "Їжа 🍔",
+      transport: "Авто 🚗",
+      shopping: "Шопінг 🛍️",
+      entertainment: "Розваги 🎬",
+      home: "Дім 🏠",
+      salary: "Зарплата 💰",
+      uncategorized: "Інше ❓",
+    };
+    return names[cat] || cat;
+  });
+  const chartData = Object.values(categoriesTotal);
+
+  const chartColors = [
+    "#ff6384",
+    "#36a2eb",
+    "#ffcd56",
+    "#4bc0c0",
+    "#9966ff",
+    "#ff9f40",
+    "#c9cbcf",
+  ];
+
+  if (myChart) {
+    myChart.destroy();
+  }
+
+  myChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: chartLabels,
+      datasets: [
+        {
+          label: "Сума",
+          data: chartData,
+          backgroundColor: chartColors,
+          borderWidth: 2,
+          borderColor: "#1e1e1e",
+          hoverOffset: 10,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            color: "#e0e0e0",
+            font: {
+              size: 14,
+            },
+            padding: 20,
+          },
+        },
+        tooltip: {
+          backgroundColor: "rgba(0,0,0,0.8)",
+          titleColor: "#fff",
+          bodyColor: "#fff",
+        },
+      },
+      layout: {
+        padding: 10,
+      },
+    },
+  });
+}
+
+function formatMoney(number) {
+  return new Intl.NumberFormat("uk-UA", {
+    style: "currency",
+    currency: selectedCurrency,
+    minimumFractionDigits: 2,
+  }).format(number);
+}
+
+currencyEl.addEventListener("change", (e) => {
+  selectedCurrency = e.target.value;
+  localStorage.setItem("currency", selectedCurrency);
+  init();
+});
 init();
